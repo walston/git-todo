@@ -4,6 +4,8 @@ set -e
   OUTPUT_FILTER="cat" # no-op
   RED=$(tput setaf 1)
   GREEN=$(tput setaf 2)
+  TODO_FLAG='@todo';
+  DONE_FLAG='@done'
   date_format=$(tput bold; tput setaf 4)
   ref_name_format=$(tput setaf 3)
   bold=$(tput bold)
@@ -14,20 +16,20 @@ set -e
 show()
 {
   IFS=""
-  echo "$GREEN@done$reset"
+  echo "$GREEN$DONE_FLAG$reset"
   git notes show \
-  | grep @todo \
-  | sed -e 's/@todo//' \
+  | grep $DONE_FLAG \
+  | sed -e "s/$DONE_FLAG//" \
   | while read -a task; do
-    echo "$GREEN X$reset ${task}"
+    echo "$GREEN  $DONE_FLAG$reset${task}"
   done
 
-  echo "$RED@todo$reset"
+  echo "$RED$TODO_FLAG$reset"
   git notes show \
-  | grep @done \
-  | sed -e 's/@done//' \
+  | grep $TODO_FLAG \
+  | sed -e "s/$TODO_FLAG//" \
   | while read -a task; do
-    echo "$RED O$reset ${task}"
+    echo "$RED  $TODO_FLAG$reset${task}"
   done
 }
 
