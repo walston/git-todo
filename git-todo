@@ -10,22 +10,25 @@ set -e
   reset=$(tput sgr0)
   ifs=$IFS
 
-  IFS=""
-  todos=$(git notes show | grep @todo | sed -e 's/@todo//')
-  dones=$(git notes show | grep @done | sed -e 's/@done//')
-
 # List all todos
 list()
 {
+  IFS=""
   echo "$GREEN@done$reset"
-  while read -a task; do
-    echo "$GREEN X$reset${task}"
-  done <<< $dones
+  git notes show \
+  | grep @todo \
+  | sed -e 's/@todo//' \
+  | while read -a task; do
+    echo "$GREEN X$reset ${task}"
+  done
 
   echo "$RED@todo$reset"
-  while read -a task; do
-    echo "$RED O$reset${task}"
-  done <<< $todos
+  git notes show \
+  | grep @done \
+  | sed -e 's/@done//' \
+  | while read -a task; do
+    echo "$RED O$reset ${task}"
+  done
 }
 
 # Create a new Todo
