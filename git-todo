@@ -2,25 +2,30 @@
 set -e
   GIT_OPTS=""
   OUTPUT_FILTER="cat" # no-op
-  commit_id_format=$(tput setaf 1)
+  RED=$(tput setaf 1)
+  GREEN=$(tput setaf 2)
   date_format=$(tput bold; tput setaf 4)
-  author_format=$(tput setaf 2)
   ref_name_format=$(tput setaf 3)
   bold=$(tput bold)
   reset=$(tput sgr0)
+  ifs=$IFS
+
+  IFS=""
+  todos=$(git notes show | grep @todo | sed -e 's/@todo//')
+  dones=$(git notes show | grep @done | sed -e 's/@done//')
+  IFS=$IFS
 
 list()
 {
-  IFS=""
-  todos=$(git notes show | grep @todo | sed -e 's/@todo/\\t-/')
-  dones=$(git notes show | grep @done | sed -e 's/@done/\\t-/')
+  echo "$GREEN@done$reset"
+  while read -a task; do
+    echo "$GREEN X$reset${task}"
+  done <<< $dones
 
-  echo "$author_format\t@done$reset"
-  echo ${dones}
-  echo
-  echo "$commit_id_format\t@todo$reset"
-  echo ${todos}
-  IFS=" \t\n"
+  echo "$RED@todo$reset"
+  while read -a task; do
+    echo "$RED O$reset${task}"
+  done <<< $todos
 }
 
 list
