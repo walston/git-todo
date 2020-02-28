@@ -11,7 +11,7 @@ set -e
   ifs=$IFS
 
 # List all todos
-list()
+show()
 {
   IFS=""
   echo "$GREEN@done$reset"
@@ -32,16 +32,47 @@ list()
 }
 
 # Create a new Todo
-# add() {}
+add()
+{
+  echo $@
+}
 
 # Get rid of a todo
-# remove() {}
+remove()
+{
+  echo $@
+}
 
 # Commit a todo as finished
-# finish() {
+finish() {
   # Commit with todo as message
   # Copy notes from HEAD~1 to HEAD
   # move message from @todo to @done
-# }
+  echo $@
+}
 
-list
+help()
+{
+  echo "usage: git todo show";
+  echo "   or: git todo add";
+  echo "   or: git todo remove";
+  echo "   or: git todo finish";
+}
+
+# list
+IFS=$ifs
+case $1 in
+  'show')
+    show;;
+  'add')
+    add;;
+  'remove')
+    remove;;
+  'finish')
+    finish;;
+  'help')
+    help;;
+  *)
+    echo "error: unknown subcommand: $1"
+    help;;
+esac
