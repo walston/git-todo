@@ -9,12 +9,17 @@ set -e
   bold=$(tput bold)
   reset=$(tput sgr0)
 
-IFS=""
-todos=$(git notes show | grep --line-buffered @todo | sed -e 's/@todo/\\t-/')
-dones=$(git notes show | grep --line-buffered @done | sed -e 's/@done/\\t-/')
+list()
+{
+  IFS=""
+  todos=$(git notes show | grep @todo | sed -e 's/@todo/\\t-/')
+  dones=$(git notes show | grep @done | sed -e 's/@done/\\t-/')
 
-echo "$author_format\t@done$reset"
-echo ${dones}
-echo
-echo "$commit_id_format\t@todo$reset"
-echo ${todos}
+  echo "$author_format\t@done$reset"
+  echo ${dones}
+  echo
+  echo "$commit_id_format\t@todo$reset"
+  echo ${todos}
+}
+
+list
