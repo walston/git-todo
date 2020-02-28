@@ -20,6 +20,7 @@ list()
   echo
   echo "$commit_id_format\t@todo$reset"
   echo ${todos}
+  IFS=" \t\n"
 }
 
 list
