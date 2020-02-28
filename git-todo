@@ -13,8 +13,8 @@ set -e
   IFS=""
   todos=$(git notes show | grep @todo | sed -e 's/@todo//')
   dones=$(git notes show | grep @done | sed -e 's/@done//')
-  IFS=$IFS
 
+# List all todos
 list()
 {
   echo "$GREEN@done$reset"
@@ -27,5 +27,18 @@ list()
     echo "$RED O$reset${task}"
   done <<< $todos
 }
+
+# Create a new Todo
+# add() {}
+
+# Get rid of a todo
+# remove() {}
+
+# Commit a todo as finished
+# finish() {
+  # Commit with todo as message
+  # Copy notes from HEAD~1 to HEAD
+  # move message from @todo to @done
+# }
 
 list
