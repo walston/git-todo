@@ -66,13 +66,13 @@ case $1 in
     show "$@" ;;
   'add')
     shift;
-    add "$@";;
+    add "$@" ;;
   'remove')
     shift;
-    remove "$0";;
+    remove "$0" ;;
   'finish')
     shift;
-    finish "$@";;
+    finish "$@" ;;
   'help')
     help;;
   *)
