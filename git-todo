@@ -65,13 +65,17 @@ help()
 IFS=$ifs
 case $1 in
   'show')
-    show;;
+    shift;
+    show "$@" ;;
   'add')
-    add;;
+    shift;
+    add "$@";;
   'remove')
-    remove;;
+    shift;
+    remove "$0";;
   'finish')
-    finish;;
+    shift;
+    finish "$@";;
   'help')
     help;;
   *)
