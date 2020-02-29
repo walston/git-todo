@@ -8,13 +8,17 @@ set -e
   DONE_FLAG='@done'
   reset=$(tput sgr0)
   ifs=$IFS
+  notes=""
 
 # List all todos
 show()
 {
   IFS=""
+  notes=$(git notes show);
+  if [ $? -gt 0 ]; then return $?; fi;
+
   echo "$GREEN$DONE_FLAG$reset"
-  git notes show \
+  echo $notes \
   | grep $DONE_FLAG \
   | sed -e "s/$DONE_FLAG//" \
   | while read -a task; do
@@ -22,7 +26,7 @@ show()
   done
 
   echo "$RED$TODO_FLAG$reset"
-  git notes show \
+  echo $notes \
   | grep $TODO_FLAG \
   | sed -e "s/$TODO_FLAG//" \
   | while read -a task; do
