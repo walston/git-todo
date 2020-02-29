@@ -33,7 +33,7 @@ show()
 # Create a new Todo
 add()
 {
-  git notes append -m "@todo $@"
+  git notes append -m "$TODO_FLAG $@"
 }
 
 # Get rid of a todo
