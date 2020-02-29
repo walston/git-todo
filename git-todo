@@ -21,7 +21,7 @@ show()
   | grep $DONE_FLAG \
   | sed -e "s/$DONE_FLAG//" \
   | while read -a task; do
-    echo "$GREEN  $DONE_FLAG$reset${task}"
+    echo "$GREEN- [x]$reset${task}"
   done
 
   echo "$RED$TODO_FLAG$reset"
@@ -29,7 +29,7 @@ show()
   | grep $TODO_FLAG \
   | sed -e "s/$TODO_FLAG//" \
   | while read -a task; do
-    echo "$RED  $TODO_FLAG$reset${task}"
+    echo "$RED- [ ]$reset${task}"
   done
 }
 
