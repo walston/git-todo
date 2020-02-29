@@ -6,9 +6,6 @@ set -e
   GREEN=$(tput setaf 2)
   TODO_FLAG='@todo';
   DONE_FLAG='@done'
-  date_format=$(tput bold; tput setaf 4)
-  ref_name_format=$(tput setaf 3)
-  bold=$(tput bold)
   reset=$(tput sgr0)
   ifs=$IFS
 
