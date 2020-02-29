@@ -36,7 +36,7 @@ show()
 # Create a new Todo
 add()
 {
-  echo $@
+  git notes append -m "@todo $@"
 }
 
 # Get rid of a todo
