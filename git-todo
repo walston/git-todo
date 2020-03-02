@@ -53,7 +53,7 @@ finish() {
   # Commit with todo as message
   # Copy notes from HEAD~1 to HEAD
   # move message from @todo to @done
-  IFS=""
+  IFS=''
   notes=$(git notes show);
   if [ $? -gt 0 ]; then return $?; fi;
 
@@ -64,17 +64,23 @@ finish() {
     echo "- [x]$task"
   done
 
-  i=1
   echo $notes \
   | grep $TODO_FLAG \
   | sed -e "s/$TODO_FLAG//" \
-  | while read -a task; do
-    echo "${i}.${task}"
-    i=$((i+1))
-  done
+  | cat -n
 
-  read -p 'Choose a todo to commit: ' selected
-  echo $selected
+  read -p "Choose a \`$TODO_FLAG' to commit: " selection
+
+  message=$( echo $notes \
+    | grep $TODO_FLAG \
+    | sed -e "s/$TODO_FLAG//" \
+    | cat -n \
+    | grep "^\s*$selection" \
+    | sed "s/$selection//"
+  )
+
+  echo "git commit -m '$message'"
+
 }
 
 help()
