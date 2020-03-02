@@ -76,10 +76,12 @@ finish() {
     | sed -e "s/$TODO_FLAG//" \
     | cat -n \
     | grep "^\s*$selection" \
-    | sed "s/$selection//"
+    | sed "s/$selection//" \
+    | xargs # this is definitely a hack... i have no idea why this works
   )
 
   echo "git commit -m '$message'"
+  echo $(sed "s/$TODO_FLAG $message/$DONE_FLAG $message/" <<< $notes)
 
 }
 
