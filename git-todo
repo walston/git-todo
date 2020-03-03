@@ -80,8 +80,18 @@ finish() {
     | xargs # this is definitely a hack... i have no idea why this works
   )
 
-  echo "git commit -m '$message'"
-  echo $(sed "s/$TODO_FLAG $message/$DONE_FLAG $message/" <<< $notes)
+  if [ -z $message ]; then
+    echo "No matching todo"
+    exit 1
+  fi
+
+  if [ $( git diff --cached --quiet ) $? -eq 0 ]; then
+    echo "Nothing staged for commit"
+    exit 1
+  fi
+
+  git commit -m "$message"
+  git notes add "$(sed "s/$TODO_FLAG $message/$DONE_FLAG $message/" <<< $notes)"
 
 }
 
