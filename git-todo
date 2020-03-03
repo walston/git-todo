@@ -50,16 +50,13 @@ remove()
 
 # Commit a todo as finished
 finish() {
-  # Commit with todo as message
-  # Copy notes from HEAD~1 to HEAD
-  # move message from @todo to @done
   IFS=''
   notes=$(git notes show);
   if [ $? -gt 0 ]; then return $?; fi;
 
-  echo $notes \
-  | grep $DONE_FLAG \
-  | sed -e "s/$DONE_FLAG/- [x]/"
+  # echo $notes \
+  # | grep $DONE_FLAG \
+  # | sed -e "s/$DONE_FLAG/- [x]/"
 
   echo $notes \
   | grep $TODO_FLAG \
