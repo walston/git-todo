@@ -59,10 +59,7 @@ finish() {
 
   echo $notes \
   | grep $DONE_FLAG \
-  | sed -e "s/$DONE_FLAG//" \
-  | while read -a task; do
-    echo "- [x]$task"
-  done
+  | sed -e "s/$DONE_FLAG/- [x]/"
 
   echo $notes \
   | grep $TODO_FLAG \
