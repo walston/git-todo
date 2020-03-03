@@ -87,6 +87,7 @@ finish() {
   git commit -m "$message"
   git notes add "$(sed "s/$TODO_FLAG $message/$DONE_FLAG $message/" <<< $notes)"
 
+  show
 }
 
 help()
