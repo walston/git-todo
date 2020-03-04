@@ -9,13 +9,19 @@ set -e
   reset=$(tput sgr0)
   ifs=$IFS
   notes=""
+  from_commit=""
 
-# List all todos
-show()
+get_notes()
 {
   IFS=""
   notes=$(git notes show);
   if [ $? -gt 0 ]; then return $?; fi;
+}
+
+# List all todos
+show()
+{
+  get_notes;
 
   echo "$GREEN$DONE_FLAG$reset"
   echo $notes \
@@ -50,9 +56,7 @@ remove()
 
 # Commit a todo as finished
 finish() {
-  IFS=''
-  notes=$(git notes show);
-  if [ $? -gt 0 ]; then return $?; fi;
+  get_notes;
 
   # echo $notes \
   # | grep $DONE_FLAG \
