@@ -13,9 +13,28 @@ set -e
 
 get_notes()
 {
-  IFS=""
-  notes=$(git notes show);
-  if [ $? -gt 0 ]; then return $?; fi;
+  # check each commit in `git-rev-list <branch-start>..HEAD`
+  # if we find a commit with notes, use those.
+  i=0
+  for rev in $( git rev-list HEAD ); do
+
+    local notes=$( git notes show $rev 2>/dev/null )
+
+    if [ "$notes" ]; then break; fi
+
+    i=$((i+1))
+
+    if [ $i -gt 15 ]; then
+      >&2 echo "No recent notes found"
+      exit 1
+    fi
+  done
+  echo $notes;
+
+  if [ "$notes" == "" ]; then
+    >&2  echo "No notes found"
+    exit 1
+  fi;
 }
 
 # List all todos
