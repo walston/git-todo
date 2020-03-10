@@ -53,6 +53,13 @@ show()
   done
 }
 
+copy()
+{
+  get_notes;
+
+  git notes add -m "$notes"
+}
+
 # Create a new Todo
 add()
 {
@@ -110,6 +117,7 @@ finish() {
 help()
 {
   echo "usage: git todo show";
+  echo "   or: git todo copy";
   echo "   or: git todo add";
   echo "   or: git todo remove";
   echo "   or: git todo finish";
@@ -121,6 +129,9 @@ case $1 in
   'show')
     shift;
     show "$@" ;;
+  'copy')
+    shift;
+    copy "$@";;
   'add')
     shift;
     add "$@" ;;
