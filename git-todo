@@ -13,26 +13,20 @@ set -e
 
 get_notes()
 {
-  # check each commit in `git-rev-list <branch-start>..HEAD`
-  # if we find a commit with notes, use those.
-  i=0
-  for rev in $( git rev-list HEAD ); do
+  notes_rev=$( \
+    for rev in $( git rev-list -25 HEAD ); do
+      git notes list $rev 2>/dev/null && break;
+    done \
+  );
+  if [ $notes_rev ]; then
+    IFS=""
+    notes=$( git cat-file -p $notes_rev )
+  fi;
 
-    local notes=$( git notes show $rev 2>/dev/null )
+  echo $notes
 
-    if [ "$notes" ]; then break; fi
-
-    i=$((i+1))
-
-    if [ $i -gt 15 ]; then
-      >&2 echo "No recent notes found"
-      exit 1
-    fi
-  done
-  echo $notes;
-
-  if [ "$notes" == "" ]; then
-    >&2  echo "No notes found"
+  if [ -z "$notes" ]; then
+    echo "No notes found"
     exit 1
   fi;
 }
