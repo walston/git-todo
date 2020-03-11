@@ -23,8 +23,6 @@ get_notes()
     notes=$( git cat-file -p $notes_rev )
   fi;
 
-  echo $notes
-
   if [ -z "$notes" ]; then
     echo "No notes found"
     exit 1
@@ -72,6 +70,15 @@ add()
 remove()
 {
   echo $@
+}
+
+mark()
+{
+  get_notes;
+
+  git notes remove;
+
+
 }
 
 # Commit a todo as finished
@@ -131,13 +138,16 @@ case $1 in
     show "$@" ;;
   'copy')
     shift;
-    copy "$@";;
+    copy "$@" ;;
   'add')
     shift;
     add "$@" ;;
   'remove')
     shift;
     remove "$0" ;;
+  'mark')
+    shift;
+    mark "$@" ;;
   'finish')
     shift;
     finish "$@" ;;
