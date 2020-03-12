@@ -8,8 +8,10 @@ set -e
   DONE_FLAG='@done'
   reset=$(tput sgr0)
   ifs=$IFS
-  notes=""
   from_commit=""
+  notes=""
+  list_of_todo=""
+  list_of_done=""
 
 get_notes()
 {
@@ -18,12 +20,13 @@ get_notes()
       git notes list $rev 2>/dev/null && break;
     done \
   );
+
   if [ $notes_rev ]; then
     IFS=""
     notes=$( git cat-file -p $notes_rev )
-  fi;
-
-  if [ -z "$notes" ]; then
+    list_of_todo=$( echo $notes | grep "$TODO_FLAG" )
+    list_of_done=$( echo $notes | grep "$DONE_FLAG" )
+  else
     echo "No notes found"
     exit 1
   fi;
@@ -35,16 +38,14 @@ show()
   get_notes;
 
   echo "$GREEN$DONE_FLAG$reset"
-  echo $notes \
-  | grep $DONE_FLAG \
+  echo $list_of_done \
   | sed -e "s/$DONE_FLAG//" \
   | while read -a task; do
     echo "$GREEN- [x]$reset${task}"
   done
 
   echo "$RED$TODO_FLAG$reset"
-  echo $notes \
-  | grep $TODO_FLAG \
+  echo $list_of_todo \
   | sed -e "s/$TODO_FLAG//" \
   | while read -a task; do
     echo "$RED- [ ]$reset${task}"
