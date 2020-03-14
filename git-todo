@@ -12,6 +12,7 @@ set -e
   notes=""
   list_of_todo=""
   list_of_done=""
+  selected_todo=""
 
 get_notes()
 {
@@ -24,8 +25,8 @@ get_notes()
   if [ $notes_rev ]; then
     IFS=""
     notes=$( git cat-file -p $notes_rev )
-    list_of_todo=$( echo $notes | grep "$TODO_FLAG" )
-    list_of_done=$( echo $notes | grep "$DONE_FLAG" )
+    list_of_todo=$( echo $notes | grep "$TODO_FLAG" || echo '' )
+    list_of_done=$( echo $notes | grep "$DONE_FLAG" || echo '' )
   else
     echo "No notes found"
     exit 1
@@ -37,19 +38,23 @@ show()
 {
   get_notes;
 
-  echo "$GREEN$DONE_FLAG$reset"
-  echo $list_of_done \
-  | sed -e "s/$DONE_FLAG//" \
-  | while read -a task; do
-    echo "$GREEN- [x]$reset${task}"
-  done
+  if [ $list_of_done ]; then
+    echo "$GREEN$DONE_FLAG$reset"
+    echo $list_of_done \
+    | sed -e "s/$DONE_FLAG//" \
+    | while read -a task; do
+      echo "$GREEN- [x]$reset${task}"
+    done
+  fi;
 
-  echo "$RED$TODO_FLAG$reset"
-  echo $list_of_todo \
-  | sed -e "s/$TODO_FLAG//" \
-  | while read -a task; do
-    echo "$RED- [ ]$reset${task}"
-  done
+    if [ $list_of_todo ]; then
+    echo "$RED$TODO_FLAG$reset"
+    echo $list_of_todo \
+    | sed -e "s/$TODO_FLAG//" \
+    | while read -a task; do
+      echo "$RED- [ ]$reset${task}"
+    done
+  fi;
 }
 
 copy()
@@ -89,27 +94,6 @@ finish() {
   # echo $notes \
   # | grep $DONE_FLAG \
   # | sed -e "s/$DONE_FLAG/- [x]/"
-
-  echo $notes \
-  | grep $TODO_FLAG \
-  | sed -e "s/$TODO_FLAG//" \
-  | cat -n
-
-  read -p "Choose a \`$TODO_FLAG' to commit: " selection
-
-  message=$( echo $notes \
-    | grep $TODO_FLAG \
-    | sed -e "s/$TODO_FLAG//" \
-    | cat -n \
-    | grep "^\s*$selection" \
-    | sed "s/$selection//" \
-    | xargs # this is definitely a hack... i have no idea why this works
-  )
-
-  if [ -z $message ]; then
-    echo "No matching todo"
-    exit 1
-  fi
 
   if [ $( git diff --cached --quiet ) $? -eq 0 ]; then
     echo "Nothing staged for commit"
