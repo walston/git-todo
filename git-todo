@@ -47,7 +47,7 @@ show()
     done
   fi;
 
-    if [ $list_of_todo ]; then
+  if [ $list_of_todo ]; then
     echo "$RED$TODO_FLAG$reset"
     echo $list_of_todo \
     | sed -e "s/$TODO_FLAG//" \
